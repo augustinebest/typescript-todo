@@ -1,22 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { TodoList } from './TodoList';
+import { AddTodoForm } from './AddTodoForm';
+
+const initialTodos: Todo[] = [
+  {
+    text: 'Walk the dog',
+    complete: false,
+  },
+  {
+    text: 'Write app',
+    complete: true,
+  },
+]
 
 function App() {
+  const [todos, setTodos] = useState(initialTodos);
+
+  const toggleTodo: ToggleTodo = (selectedTodo: Todo) => {
+    console.log('selectedTodo', selectedTodo)
+    const newTodos = todos.map(todo => {
+      if (todo === selectedTodo) {
+        return {
+          ...todo,
+          complete: !todo.complete,
+        };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  }
+
+  const addTodo: AddTodo = (text: string) => {
+    const newTodo = { text, complete: false };
+    setTodos([...todos, newTodo]);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <TodoList todos={todos} toggleTodo={toggleTodo} />
+      <AddTodoForm addTodo={addTodo} />
+    </>
   );
 }
 
